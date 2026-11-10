@@ -19,8 +19,10 @@ G=$((16#${HEX:2:2}))
 B=$((16#${HEX:4:2}))
 RGBA="rgba($R, $G, $B, 0.85)"
 
-# Write override CSS
-cat > "$COLORS_CSS" << EOF
+# Write override CSS atomically: write to a temp file first, then move it
+# into place (rename on the same tmpfs is atomic) so a concurrently
+# reloading waybar can never read a partially written file.
+cat > "${COLORS_CSS}.tmp" << EOF
 #window, #mpris, #pulseaudio, #tray,
 #idle_inhibitor, #custom-notification,
 #custom-power, #custom-weather,
@@ -31,6 +33,12 @@ cat > "$COLORS_CSS" << EOF
     background-color: ${RGBA};
 }
 EOF
+mv -f "${COLORS_CSS}.tmp" "$COLORS_CSS"
 
-# Reload main waybar only (not dock)
-pgrep -af "waybar" | grep -v "dock" | awk '{print $1}' | xargs -r kill -SIGUSR2
+# Reload main waybar only (not dock).
+# pgrep -x matches the process *name* exactly. The old "pgrep -af waybar"
+# matched any cmdline containing "waybar" (e.g. the autostart shell running
+# "theme.sh && waybar") and SIGUSR2-killed it.
+for pid in $(pgrep -x waybar); do
+    tr '\0' ' ' < "/proc/$pid/cmdline" | grep -q -- '--bar dock' || kill -USR2 "$pid"
+done
