@@ -134,11 +134,11 @@
     },
 
     "custom/powerprofile": {
-        "format": "󰈐 ",
-        "exec": "powerprofilesctl get",
-        "interval": 2,
-        "on-click": "curr=$(powerprofilesctl get); if [ \"$curr\" == \"balanced\" ]; then powerprofilesctl set performance; elif [ \"$curr\" == \"performance\" ]; then powerprofilesctl set power-saver; else powerprofilesctl set balanced; fi",
-        "tooltip-format": "Power Profile: {}",
+        "format": "󰈐 {}",
+        "exec": "case $(cat /sys/firmware/acpi/platform_profile) in low-power) echo 'Max battery' ;; balanced) echo 'Balanced' ;; performance) echo 'Performance' ;; *) echo 'Unknown' ;; esac",
+        "interval": 10,
+        "on-click": "notify-send 'Power profile' \"$(cat /sys/firmware/acpi/platform_profile) - managed by TLP\"",
+        "tooltip-format": "Power profile (TLP): {}",
         "tooltip": true
     },
 
