@@ -5,3 +5,5 @@ configuration {
 }
 
 @theme "~/.config/rofi/themes/tokyo-night.rasi"
+// Wallpaper colours from waybar/theme.sh (ignored if missing)
+@import "~/.cache/wal/colors-rofi-theme.rasi"

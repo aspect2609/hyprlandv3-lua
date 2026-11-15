@@ -1,19 +1,5 @@
--- Blur, shadows and animations follow the power source so a config reload
--- on battery doesn't turn them back on. scripts/battery-mode.sh handles
--- plug/unplug while running.
-local function on_ac()
-    for _, name in ipairs({ "AC", "ADP0", "ADP1", "ACAD" }) do
-        local f = io.open("/sys/class/power_supply/" .. name .. "/online")
-        if f then
-            local v = f:read("l")
-            f:close()
-            if v == "1" then return true end
-        end
-    end
-    return false
-end
-
-local effects = on_ac()
+-- Blur/shadows/animations here are the on-AC values; power.lua turns them off
+-- on battery. Border colours are overridden by theme.lua when a palette exists.
 
 hl.config({
     general = {
@@ -40,14 +26,14 @@ hl.config({
         inactive_opacity = 1.0,
 
         shadow = {
-            enabled = effects,
+            enabled = true,
             range = 4,
             render_power = 3,
             color = "rgba(1a1a1aee)",
         },
 
         blur = {
-            enabled = effects,
+            enabled = true,
             size = 3,
             passes = 1,
             vibrancy = 0.1696,
@@ -55,7 +41,7 @@ hl.config({
     },
 
     animations = {
-        enabled = effects,
+        enabled = true,
     },
 
     dwindle = {

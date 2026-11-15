@@ -2,54 +2,69 @@ local apps = require("modules.programs")
 
 local mainMod = "SUPER"
 
-hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd(apps.terminal))
-hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(apps.browser))
-hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd(apps.code))
-hl.bind(mainMod .. " + CTRL + RETURN", hl.dsp.exec_cmd(apps.appmanager))
-hl.bind(mainMod .. " + C", hl.dsp.window.close())
-hl.bind(mainMod .. " + M", hl.dsp.exec_cmd('command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch "hl.dsp.exit()"'))
-hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(apps.fileManager))
-hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(apps.menu))
-hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
-hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))
-hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy'))
-hl.bind(mainMod .. " + left",  hl.dsp.focus({ direction = "left" }))
-hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }))
-hl.bind(mainMod .. " + up",    hl.dsp.focus({ direction = "up" }))
-hl.bind(mainMod .. " + down",  hl.dsp.focus({ direction = "down" }))
-hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("~/.config/waybar/reload.sh"))
-hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
-hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd("~/.config/waypaper/randomize.sh"))
-
--- Switch workspaces with mainMod + [1-0]
--- Move active window to a workspace with mainMod + SHIFT + [1-0]
-for i = 1, 10 do
-    local key = i % 10 -- 10 maps to key 0
-    hl.bind(mainMod .. " + " .. key,         hl.dsp.focus({ workspace = i }))
-    hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
+-- Every bind carries a description; SUPER + / lists them (scripts/keybinds.sh).
+local function bind(keys, description, dispatcher, opts)
+    opts = opts or {}
+    opts.description = description
+    hl.bind(keys, dispatcher, opts)
 end
 
-hl.bind(mainMod .. " + S",         hl.dsp.workspace.toggle_special("magic"))
-hl.bind(mainMod .. " + SHIFT + X", hl.dsp.window.move({ workspace = "special:magic" }))
+local function mod(keys) return mainMod .. " + " .. keys end
 
-hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
-hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "e-1" }))
+-- Apps
+bind(mod("Q"),              "Terminal",         hl.dsp.exec_cmd(apps.terminal))
+bind(mod("B"),              "Browser",          hl.dsp.exec_cmd(apps.browser))
+bind(mod("RETURN"),         "Code editor",      hl.dsp.exec_cmd(apps.code))
+bind(mod("CTRL + RETURN"),  "App launcher",     hl.dsp.exec_cmd(apps.appmanager))
+bind(mod("E"),              "File manager",     hl.dsp.exec_cmd(apps.fileManager))
+bind(mod("R"),              "Run menu",         hl.dsp.exec_cmd(apps.menu))
 
--- Move/resize windows with mainMod + LMB/RMB and dragging
-hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })
-hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
+-- Session
+bind(mod("L"),              "Lock screen",      hl.dsp.exec_cmd("hyprlock"))
+bind(mod("Escape"),         "Power menu",       hl.dsp.exec_cmd("pidof wlogout || wlogout -b 3"))
+bind(mod("M"),              "Exit Hyprland",    hl.dsp.exec_cmd('command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch "hl.dsp.exit()"'))
+bind(mod("slash"),          "Show keybinds",    hl.dsp.exec_cmd("~/.config/hypr/scripts/keybinds.sh"))
 
--- Laptop multimedia keys
-hl.bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true, repeating = true })
-hl.bind("XF86AudioLowerVolume",  hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),      { locked = true, repeating = true })
-hl.bind("XF86AudioMute",         hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),     { locked = true, repeating = true })
-hl.bind("XF86AudioMicMute",      hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),   { locked = true, repeating = true })
-hl.bind("XF86MonBrightnessUp",   hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%+"),                 { locked = true, repeating = true })
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%-"),                 { locked = true, repeating = true })
+-- Desktop
+bind(mod("SHIFT + B"),      "Reload waybar",     hl.dsp.exec_cmd("~/.config/waybar/reload.sh"))
+bind(mod("SHIFT + S"),      "Random wallpaper",  hl.dsp.exec_cmd("~/.config/waypaper/randomize.sh"))
+bind(mod("Print"),          "Screenshot region", hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy'))
+
+-- Windows
+bind(mod("C"),              "Close window",        hl.dsp.window.close())
+bind(mod("V"),              "Toggle floating",     hl.dsp.window.float({ action = "toggle" }))
+bind(mod("P"),              "Pseudo-tile",         hl.dsp.window.pseudo())
+bind(mod("J"),              "Toggle split",        hl.dsp.layout("togglesplit"))
+bind(mod("left"),           "Focus left",          hl.dsp.focus({ direction = "left" }))
+bind(mod("right"),          "Focus right",         hl.dsp.focus({ direction = "right" }))
+bind(mod("up"),             "Focus up",            hl.dsp.focus({ direction = "up" }))
+bind(mod("down"),           "Focus down",          hl.dsp.focus({ direction = "down" }))
+bind(mod("mouse:272"),      "Move window (drag)",  hl.dsp.window.drag(),   { mouse = true })
+bind(mod("mouse:273"),      "Resize window (drag)", hl.dsp.window.resize(), { mouse = true })
+
+-- Workspaces: mainMod + [1-0] switches, mainMod + SHIFT + [1-0] moves the window
+for i = 1, 10 do
+    local key = i % 10 -- 10 maps to key 0
+    bind(mod(key),             "Workspace " .. i,              hl.dsp.focus({ workspace = i }))
+    bind(mod("SHIFT + " .. key), "Move window to workspace " .. i, hl.dsp.window.move({ workspace = i }))
+end
+
+bind(mod("S"),              "Toggle special workspace",       hl.dsp.workspace.toggle_special("magic"))
+bind(mod("SHIFT + X"),      "Move window to special workspace", hl.dsp.window.move({ workspace = "special:magic" }))
+bind(mod("mouse_down"),     "Next workspace",                 hl.dsp.focus({ workspace = "e+1" }))
+bind(mod("mouse_up"),       "Previous workspace",             hl.dsp.focus({ workspace = "e-1" }))
+
+-- Laptop multimedia keys, with on-screen popups from swayosd
+local held = { locked = true, repeating = true }
+bind("XF86AudioRaiseVolume",  "Volume up",       hl.dsp.exec_cmd("swayosd-client --output-volume raise --max-volume 100"), held)
+bind("XF86AudioLowerVolume",  "Volume down",     hl.dsp.exec_cmd("swayosd-client --output-volume lower"),       held)
+bind("XF86AudioMute",         "Mute",            hl.dsp.exec_cmd("swayosd-client --output-volume mute-toggle"), held)
+bind("XF86AudioMicMute",      "Mute microphone", hl.dsp.exec_cmd("swayosd-client --input-volume mute-toggle"),  held)
+bind("XF86MonBrightnessUp",   "Brightness up",   hl.dsp.exec_cmd("swayosd-client --brightness +5"),             held)
+bind("XF86MonBrightnessDown", "Brightness down", hl.dsp.exec_cmd("swayosd-client --brightness -5 --min-brightness 2"), held)
 
 -- Requires playerctl
-hl.bind("XF86AudioNext",  hl.dsp.exec_cmd("playerctl next"),       { locked = true })
-hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
-hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
-hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
+bind("XF86AudioNext",  "Next track",     hl.dsp.exec_cmd("playerctl next"),       { locked = true })
+bind("XF86AudioPause", "Play/pause",     hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
+bind("XF86AudioPlay",  "Play/pause",     hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
+bind("XF86AudioPrev",  "Previous track", hl.dsp.exec_cmd("playerctl previous"),   { locked = true })

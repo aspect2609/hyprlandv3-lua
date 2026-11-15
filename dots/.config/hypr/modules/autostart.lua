@@ -9,6 +9,8 @@ hl.on("hyprland.start", function()
     -- hl.exec_cmd("~/.config/hypr/scripts/popup-dock.sh &")
     hl.exec_cmd("nm-applet --indicator")
     hl.exec_cmd("swaync")
+    -- Volume/brightness popups for the media keys
+    hl.exec_cmd("swayosd-server")
     hl.exec_cmd("hypridle")
     -- Disables blur/shadows/animations on battery, restores them on AC.
     hl.exec_cmd("~/.config/hypr/scripts/battery-mode.sh")

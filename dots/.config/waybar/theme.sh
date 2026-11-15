@@ -1,28 +1,43 @@
 #!/usr/bin/env bash
+# Theme everything from the current wallpaper's pywal palette.
+# Runs at login (modules/autostart.lua) and after every wallpaper change
+# (waypaper post_command). Writes:
+#   /tmp/waybar-colors.css                waybar module backgrounds
+#   ~/.cache/wal/colors-rofi-theme.rasi   rofi (imported by rofi/config.rasi)
+#   ~/.cache/wal/colors-hyprlock.conf     hyprlock (sourced by hyprlock.conf)
+#   ~/.config/wlogout/colors.css          wlogout (imported by style.css)
+# kitty includes wal's own colors-kitty.conf; window borders come from
+# hypr/modules/theme.lua. If pywal fails, a Tokyo Night palette is used so
+# every file above still exists.
 
 COLORS_CSS="/tmp/waybar-colors.css"
+WAL="$HOME/.cache/wal"
+mkdir -p "$WAL"
 
 # Get wallpaper path
 WALLPAPER=$(grep '^wallpaper' ~/.config/waypaper/config.ini | cut -d'=' -f2 | xargs | sed "s|~|$HOME|")
-[ -z "$WALLPAPER" ] && exit 1
 
-# Generate palette
-wal -i "$WALLPAPER" -n -q --backend haishoku
+# Generate palette (also recolours open terminals via escape sequences)
+if [ -n "$WALLPAPER" ] && wal -i "$WALLPAPER" -n -q --backend haishoku; then
+    source "$WAL/colors.sh"
+else
+    background='#1a1b26' foreground='#c0caf5'
+    color0='#15161e' color1='#f7768e' color4='#7aa2f7'
+    color5='#bb9af7' color7='#a9b1d6' color8='#414868'
+fi
 
-# Source colors
-source "$HOME/.cache/wal/colors.sh"
+# Write a file atomically: write to a temp file first, then move it into
+# place (rename on the same filesystem is atomic) so a reader can never see
+# a partially written file.
+write() { cat > "$1.tmp" && mv -f "$1.tmp" "$1"; }
 
-# Convert color0 hex to rgba with slight transparency
-HEX="${color1#\#}"
-R=$((16#${HEX:0:2}))
-G=$((16#${HEX:2:2}))
-B=$((16#${HEX:4:2}))
-RGBA="rgba($R, $G, $B, 0.85)"
+hex_rgba() {  # #rrggbb alpha -> rgba(r, g, b, alpha)
+    local h="${1#\#}"
+    echo "rgba($((16#${h:0:2})), $((16#${h:2:2})), $((16#${h:4:2})), $2)"
+}
 
-# Write override CSS atomically: write to a temp file first, then move it
-# into place (rename on the same tmpfs is atomic) so a concurrently
-# reloading waybar can never read a partially written file.
-cat > "${COLORS_CSS}.tmp" << EOF
+# --- waybar ---
+write "$COLORS_CSS" << EOF
 #window, #mpris, #pulseaudio, #tray,
 #idle_inhibitor, #custom-notification,
 #custom-power, #custom-weather,
@@ -30,10 +45,41 @@ cat > "${COLORS_CSS}.tmp" << EOF
 #custom-system, #clock, #custom-date,
 #custom-keyboard-light, #backlight,
 #custom-powerprofile, #battery {
-    background-color: ${RGBA};
+    background-color: $(hex_rgba "$color1" 0.85);
 }
 EOF
-mv -f "${COLORS_CSS}.tmp" "$COLORS_CSS"
+
+# --- rofi: override the colour variables of themes/tokyo-night.rasi ---
+write "$WAL/colors-rofi-theme.rasi" << EOF
+* {
+    bg0:        ${background};
+    bg1:        ${color0};
+    bg2:        ${color8};
+    border-col: ${color8};
+    accent:     ${color4};
+    accent2:    ${color5};
+    fg0:        ${foreground};
+    fg1:        ${color7};
+}
+EOF
+
+# --- hyprlock ---
+write "$WAL/colors-hyprlock.conf" << EOF
+\$wal_accent = rgb(${color4#\#})
+\$wal_fg     = rgb(${foreground#\#})
+\$wal_bg     = rgb(${color0#\#})
+EOF
+
+# --- wlogout ---
+write "$HOME/.config/wlogout/colors.css" << EOF
+@define-color wal_bg     ${background};
+@define-color wal_button ${color0};
+@define-color wal_accent ${color4};
+@define-color wal_fg     ${foreground};
+EOF
+
+# --- Hyprland window borders ---
+hyprctl eval 'require("modules.theme").apply()' >/dev/null 2>&1
 
 # Reload main waybar only (not dock).
 # pgrep -x matches the process *name* exactly. The old "pgrep -af waybar"
