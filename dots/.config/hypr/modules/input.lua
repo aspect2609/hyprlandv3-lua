@@ -22,11 +22,11 @@ hl.config({
 })
 
 -- Slightly quicker pointer with acceleration, touchpad only (TrackPoint and
--- mice keep the global sensitivity). If the touchpad is ever switched to
--- SMBus/intertouch its device name changes; see `hyprctl devices`.
+-- mice keep the global sensitivity). Name is the SMBus/intertouch device
+-- (psmouse.synaptics_intertouch=1 in /etc/modprobe.d); see `hyprctl devices`.
 hl.device({
-    name = "synps/2-synaptics-touchpad",
-    sensitivity = 0.25,
+    name = "synaptics-tm3471-030",
+    sensitivity = 0.3,
     accel_profile = "adaptive",
 })
 
