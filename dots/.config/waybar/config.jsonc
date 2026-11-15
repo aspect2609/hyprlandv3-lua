@@ -184,7 +184,7 @@
 
     "custom/power": {
         "format": " ",
-        "on-click": "hyprctl dispatch exit",
+        "on-click": "pidof wlogout || wlogout -b 3",
         "tooltip-format": "Power Menu",
         "tooltip": true
     },
