@@ -12,6 +12,8 @@ hl.on("hyprland.start", function()
     -- Volume/brightness popups for the media keys
     hl.exec_cmd("swayosd-server")
     hl.exec_cmd("hypridle")
+    -- Password prompts for apps that need admin rights (pkexec, Thunar mounts, ...)
+    hl.exec_cmd("systemctl --user start hyprpolkitagent")
     -- Disables blur/shadows/animations on battery, restores them on AC.
     hl.exec_cmd("~/.config/hypr/scripts/battery-mode.sh")
 end)
