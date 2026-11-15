@@ -16,4 +16,6 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("systemctl --user start hyprpolkitagent")
     -- Disables blur/shadows/animations on battery, restores them on AC.
     hl.exec_cmd("~/.config/hypr/scripts/battery-mode.sh")
+    -- Keeps the screen awake while media plays (hypridle honours it).
+    hl.exec_cmd("~/.config/hypr/scripts/media-inhibit.sh")
 end)

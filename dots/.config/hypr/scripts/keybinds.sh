@@ -8,7 +8,7 @@ hyprctl binds -j | python3 -c '
 import json, sys
 MODS = [(64, "SUPER"), (4, "CTRL"), (8, "ALT"), (1, "SHIFT")]
 NAMES = {"mouse:272": "LMB drag", "mouse:273": "RMB drag", "mouse_down": "Scroll down",
-         "mouse_up": "Scroll up", "slash": "/", "RETURN": "Enter"}
+         "mouse_up": "Scroll up", "slash": "/", "grave": "`", "RETURN": "Enter"}
 for b in json.load(sys.stdin):
     if not b["has_description"]:
         continue

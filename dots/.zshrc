@@ -35,3 +35,13 @@ command -v zoxide >/dev/null && eval "$(zoxide init zsh)"
 
 # --- Prompt: starship if installed, else oh-my-zsh theme ---
 command -v starship >/dev/null && eval "$(starship init zsh)"
+
+# --- Drop-down terminal (SUPER + `): Esc at the prompt hides it ---
+# Only in that terminal (scripts/dropterm.sh sets DROPTERM=1). Apps like vim
+# still get Esc, since zsh only sees keys while sitting at the prompt.
+if [[ -n $DROPTERM ]]; then
+    dropterm-hide() { hyprctl dispatch 'hl.dsp.workspace.toggle_special("dropterm")' >/dev/null }
+    zle -N dropterm-hide
+    bindkey '\e' dropterm-hide
+    KEYTIMEOUT=10   # 0.1s to tell a lone Esc from Alt/arrow sequences
+fi

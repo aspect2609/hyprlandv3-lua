@@ -13,6 +13,7 @@ local function mod(keys) return mainMod .. " + " .. keys end
 
 -- Apps
 bind(mod("Q"),              "Terminal",         hl.dsp.exec_cmd(apps.terminal))
+bind(mod("grave"),          "Drop-down terminal", hl.dsp.exec_cmd("~/.config/hypr/scripts/dropterm.sh"))
 bind(mod("B"),              "Browser",          hl.dsp.exec_cmd(apps.browser))
 bind(mod("RETURN"),         "Code editor",      hl.dsp.exec_cmd(apps.code))
 bind(mod("CTRL + RETURN"),  "App launcher",     hl.dsp.exec_cmd(apps.appmanager))
@@ -28,6 +29,7 @@ bind(mod("slash"),          "Show keybinds",    hl.dsp.exec_cmd("~/.config/hypr/
 -- Desktop
 bind(mod("SHIFT + B"),      "Reload waybar",     hl.dsp.exec_cmd("~/.config/waybar/reload.sh"))
 bind(mod("SHIFT + S"),      "Random wallpaper",  hl.dsp.exec_cmd("~/.config/waypaper/randomize.sh"))
+bind(mod("W"),              "Pick wallpaper",    hl.dsp.exec_cmd("~/.config/hypr/scripts/wallpaper-picker.sh"))
 bind(mod("Print"),          "Screenshot region", hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy'))
 
 -- Windows
