@@ -20,7 +20,7 @@ hl.monitor({
 local terminal    = "kitty"
 local fileManager = "thunar"
 local menu        = "hyprlauncher"
-local browser      = "librewolf"
+local browser      = "firefox"
 local code         = "code"
 local appmanager   = "rofi -show drun"
 
