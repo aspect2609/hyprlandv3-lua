@@ -9,5 +9,4 @@ if [ -z "$wallpaper" ]; then
     exit 1
 fi
 
-swaybg -i "$wallpaper" -m fill &
 waypaper --wallpaper "$wallpaper"

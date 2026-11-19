@@ -31,4 +31,10 @@ end
 
 M.apply()
 
+-- Lid: blank the panel on close, wake it on open. logind still suspends on
+-- close; the DPMS off->on cycle forces a full repaint on open, so hyprlock
+-- shows the current time immediately instead of the pre-suspend frame.
+hl.bind("switch:on:Lid Switch",  hl.dsp.dpms({ action = "off" }), { locked = true })
+hl.bind("switch:off:Lid Switch", hl.dsp.dpms({ action = "on" }),  { locked = true })
+
 return M

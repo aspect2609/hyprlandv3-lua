@@ -14,6 +14,13 @@ COLORS_CSS="/tmp/waybar-colors.css"
 WAL="$HOME/.cache/wal"
 mkdir -p "$WAL"
 
+# Waypaper starts a new swaybg on every change without stopping the old one;
+# keep only the newest (the wallpaper just set) so they don't pile up.
+newest=$(pgrep -nx swaybg)
+for pid in $(pgrep -x swaybg); do
+    [ "$pid" != "$newest" ] && kill "$pid"
+done
+
 # Get wallpaper path
 WALLPAPER=$(grep '^wallpaper' ~/.config/waypaper/config.ini | cut -d'=' -f2 | xargs | sed "s|~|$HOME|")
 
@@ -68,6 +75,7 @@ write "$WAL/colors-hyprlock.conf" << EOF
 \$wal_accent = rgb(${color4#\#})
 \$wal_fg     = rgb(${foreground#\#})
 \$wal_bg     = rgb(${color0#\#})
+\$wal_wallpaper = ${WALLPAPER}
 EOF
 
 # --- wlogout ---
