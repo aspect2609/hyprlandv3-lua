@@ -53,7 +53,7 @@
 
     "custom/rofi": {
         "format": "󰣇 ",
-        "on-click": "rofi -show drun",
+        "on-click": "~/.config/rofi/spotlight.sh",
         "tooltip": false
     }
 }

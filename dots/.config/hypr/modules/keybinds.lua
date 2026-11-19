@@ -16,6 +16,7 @@ bind(mod("Q"),              "Terminal",         hl.dsp.exec_cmd(apps.terminal))
 bind(mod("grave"),          "Drop-down terminal", hl.dsp.exec_cmd("~/.config/hypr/scripts/dropterm.sh"))
 bind(mod("B"),              "Browser",          hl.dsp.exec_cmd(apps.browser))
 bind(mod("RETURN"),         "Code editor",      hl.dsp.exec_cmd(apps.code))
+bind(mod("SPACE"),          "Spotlight search", hl.dsp.exec_cmd(apps.appmanager))
 bind(mod("CTRL + RETURN"),  "App launcher",     hl.dsp.exec_cmd(apps.appmanager))
 bind(mod("E"),              "File manager",     hl.dsp.exec_cmd(apps.fileManager))
 bind(mod("R"),              "Run menu",         hl.dsp.exec_cmd(apps.menu))
@@ -31,16 +32,33 @@ bind(mod("SHIFT + B"),      "Reload waybar",     hl.dsp.exec_cmd("~/.config/wayb
 bind(mod("SHIFT + S"),      "Random wallpaper",  hl.dsp.exec_cmd("~/.config/waypaper/randomize.sh"))
 bind(mod("W"),              "Pick wallpaper",    hl.dsp.exec_cmd("~/.config/hypr/scripts/wallpaper-picker.sh"))
 bind(mod("Print"),          "Screenshot region", hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy'))
+bind(mod("SHIFT + Print"),  "Screenshot region (annotate)", hl.dsp.exec_cmd('grim -g "$(slurp)" - | satty --filename - --copy-command wl-copy --early-exit'))
+bind("Print",               "Screenshot full screen", hl.dsp.exec_cmd("grim - | wl-copy"))
+bind(mod("N"),              "Notification panel", hl.dsp.exec_cmd("swaync-client -t -sw"))
+bind(mod("SHIFT + V"),      "Clipboard history", hl.dsp.exec_cmd("cliphist list | rofi -dmenu -p clipboard -display-columns 2 | cliphist decode | wl-copy"))
+bind(mod("SHIFT + C"),      "Colour picker",     hl.dsp.exec_cmd("hyprpicker -a"))
 
 -- Windows
 bind(mod("C"),              "Close window",        hl.dsp.window.close())
 bind(mod("V"),              "Toggle floating",     hl.dsp.window.float({ action = "toggle" }))
 bind(mod("P"),              "Pseudo-tile",         hl.dsp.window.pseudo())
 bind(mod("J"),              "Toggle split",        hl.dsp.layout("togglesplit"))
+bind(mod("F"),              "Fullscreen",          hl.dsp.window.fullscreen())
+bind(mod("SHIFT + F"),      "Maximize",            hl.dsp.window.fullscreen({ mode = "maximized" }))
 bind(mod("left"),           "Focus left",          hl.dsp.focus({ direction = "left" }))
 bind(mod("right"),          "Focus right",         hl.dsp.focus({ direction = "right" }))
 bind(mod("up"),             "Focus up",            hl.dsp.focus({ direction = "up" }))
 bind(mod("down"),           "Focus down",          hl.dsp.focus({ direction = "down" }))
+for _, dir in ipairs({ "left", "right", "up", "down" }) do
+    bind(mod("SHIFT + " .. dir), "Swap window " .. dir, hl.dsp.window.swap({ direction = dir }))
+end
+-- Hold to keep resizing
+local step = 40
+local resize = { left = { -step, 0 }, right = { step, 0 }, up = { 0, -step }, down = { 0, step } }
+for dir, d in pairs(resize) do
+    bind(mod("CTRL + " .. dir), "Resize window " .. dir,
+        hl.dsp.window.resize({ x = d[1], y = d[2], relative = true }), { repeating = true })
+end
 bind(mod("mouse:272"),      "Move window (drag)",  hl.dsp.window.drag(),   { mouse = true })
 bind(mod("mouse:273"),      "Resize window (drag)", hl.dsp.window.resize(), { mouse = true })
 

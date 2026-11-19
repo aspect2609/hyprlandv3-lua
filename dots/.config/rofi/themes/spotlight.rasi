@@ -1,0 +1,124 @@
+/**
+ * Spotlight — macOS-style search bar for rofi (used by ../spotlight.sh)
+ * Colours fall back to Tokyo Night; waybar/theme.sh overrides them from the
+ * wallpaper via the import at the bottom.
+ */
+
+* {
+    bg0:         #1a1b2e;
+    bg2:         #0f3460;
+    border-col:  #414868;
+    accent:      #7dcfff;
+    fg0:         #c0caf5;
+    fg1:         #a9b1d6;
+    fg2:         #565f89;
+    glass:       #1a1b2ee0;   /* translucent panel; Hyprland blurs behind it */
+
+    background-color:   transparent;
+    text-color:         @fg0;
+    font:               "Noto Sans 12";
+}
+
+window {
+    location:           north;
+    anchor:             north;
+    y-offset:           22%;
+    width:              680px;
+    background-color:   @glass;
+    border:             1px;
+    border-color:       @border-col;
+    border-radius:      14px;
+}
+
+mainbox {
+    children:           [ inputbar, message, listview ];
+    spacing:            0px;
+}
+
+inputbar {
+    padding:            14px 18px;
+    spacing:            12px;
+    children:           [ icon-search, entry, prompt ];
+}
+
+icon-search {
+    expand:             false;
+    filename:           "system-search";
+    size:               26px;
+    vertical-align:     0.5;
+}
+
+entry {
+    font:               "Noto Sans Light 20";
+    placeholder:        "Spotlight Search";
+    placeholder-color:  @fg2;
+    vertical-align:     0.5;
+    cursor:             text;
+}
+
+/* Mode label on the right, e.g. "Calculator" (blank in the launcher) */
+prompt {
+    vertical-align:     0.5;
+    text-color:         @fg2;
+}
+
+message {
+    padding:            0px 18px 10px 56px;
+}
+
+textbox {
+    text-color:         @fg1;
+    font:               "Noto Sans 11";
+}
+
+listview {
+    require-input:      true;     /* empty until you start typing */
+    lines:              8;
+    fixed-height:       false;
+    dynamic:            true;
+    scrollbar:          false;
+    cycle:              true;
+    padding:            6px 8px 8px 8px;
+    spacing:            2px;
+    border:             1px 0px 0px 0px;
+    border-color:       @border-col;
+}
+
+element {
+    padding:            7px 10px;
+    spacing:            12px;
+    border-radius:      8px;
+    text-color:         @fg1;
+}
+
+element normal.normal,
+element alternate.normal {
+    background-color:   transparent;
+    text-color:         @fg1;
+}
+
+element normal.active,
+element alternate.active {
+    background-color:   transparent;
+    text-color:         @accent;
+}
+
+element selected.normal,
+element selected.active {
+    background-color:   @bg2;
+    text-color:         @fg0;
+}
+
+element-icon {
+    size:               28px;
+    vertical-align:     0.5;
+    cursor:             inherit;
+}
+
+element-text {
+    vertical-align:     0.5;
+    text-color:         inherit;
+    cursor:             inherit;
+}
+
+@import "~/.cache/wal/colors-rofi-theme.rasi"

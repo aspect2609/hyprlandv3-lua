@@ -1,7 +1,7 @@
 configuration {
     modi:           "drun,run,window";
     show-icons:     true;
-    icon-theme:     "Papirus-Dark";
+    icon-theme:     "Tela-circle-black-dark";
 }
 
 @theme "~/.config/rofi/themes/tokyo-night.rasi"

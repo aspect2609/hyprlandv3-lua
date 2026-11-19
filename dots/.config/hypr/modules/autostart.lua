@@ -18,4 +18,9 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("~/.config/hypr/scripts/battery-mode.sh")
     -- Keeps the screen awake while media plays (hypridle honours it).
     hl.exec_cmd("~/.config/hypr/scripts/media-inhibit.sh")
+    -- Clipboard history for SUPER + SHIFT + V
+    hl.exec_cmd("wl-paste --type text --watch cliphist store")
+    hl.exec_cmd("wl-paste --type image --watch cliphist store")
+    -- Auto-mount USB drives
+    hl.exec_cmd("udiskie")
 end)

@@ -31,7 +31,7 @@
 
     "custom/launcher": {
         "format": " ",
-        "on-click": "rofi -show drun",
+        "on-click": "~/.config/rofi/spotlight.sh",
         "tooltip": false
     },
 
@@ -89,7 +89,9 @@
             "spotify": "",
             "firefox": ""
         },
-        "max-length": 15
+        "max-length": 15,
+        "on-click": "~/.config/waybar/music-popup.py",
+        "on-click-middle": "playerctl play-pause"
     },
 
     "clock": {

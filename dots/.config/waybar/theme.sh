@@ -67,6 +67,8 @@ write "$WAL/colors-rofi-theme.rasi" << EOF
     accent2:    ${color5};
     fg0:        ${foreground};
     fg1:        ${color7};
+    fg2:        ${color8};
+    glass:      ${background}e0;
 }
 EOF
 

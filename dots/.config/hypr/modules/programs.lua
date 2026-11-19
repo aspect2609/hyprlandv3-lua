@@ -6,5 +6,5 @@ return {
     menu        = "hyprlauncher",
     browser     = "firefox",
     code        = "code",
-    appmanager  = "rofi -show drun",
+    appmanager  = "~/.config/rofi/spotlight.sh",
 }
