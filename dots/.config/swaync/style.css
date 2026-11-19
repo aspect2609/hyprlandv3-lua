@@ -1,0 +1,26 @@
+/* Start from the stock SwayNC theme, then tweak the new widgets */
+@import url("/etc/xdg/swaync/style.css");
+/* Wallpaper colours, written by waybar/theme.sh */
+@import url("file:///home/harvey/.cache/wal/colors-swaync.css");
+
+.widget-buttons-grid {
+  padding: 8px;
+  margin: 8px;
+  border-radius: 12px;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button {
+  border-radius: 10px;
+  padding: 8px;
+  font-weight: bold;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button:checked {
+  background: alpha(@wal-accent, 0.85);
+  color: @wal-bg;
+}
+
+.widget-mpris {
+  margin: 8px;
+  border-radius: 12px;
+}

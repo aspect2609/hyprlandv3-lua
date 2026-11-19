@@ -22,7 +22,7 @@ bind(mod("E"),              "File manager",     hl.dsp.exec_cmd(apps.fileManager
 bind(mod("R"),              "Run menu",         hl.dsp.exec_cmd(apps.menu))
 
 -- Session
-bind(mod("L"),              "Lock screen",      hl.dsp.exec_cmd("hyprlock"))
+bind(mod("L"),              "Lock screen",      hl.dsp.exec_cmd("~/.config/hypr/scripts/lock.sh"))
 bind(mod("Escape"),         "Power menu",       hl.dsp.exec_cmd("pidof wlogout || wlogout -b 3"))
 bind(mod("M"),              "Exit Hyprland",    hl.dsp.exec_cmd('command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch "hl.dsp.exit()"'))
 bind(mod("slash"),          "Show keybinds",    hl.dsp.exec_cmd("~/.config/hypr/scripts/keybinds.sh"))

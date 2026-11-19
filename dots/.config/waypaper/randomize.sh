@@ -9,4 +9,4 @@ if [ -z "$wallpaper" ]; then
     exit 1
 fi
 
-waypaper --wallpaper "$wallpaper"
+~/.config/hypr/scripts/wallpaper.sh "$wallpaper"

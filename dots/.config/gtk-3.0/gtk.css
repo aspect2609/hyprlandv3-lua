@@ -1,3 +1,6 @@
+/* Wallpaper colours, written by waybar/theme.sh */
+@import url("file:///home/harvey/.cache/wal/colors-gtk.css");
+
 window, .nautilus-window, ThunarWindow {
-    background-color: alpha(#1a1b2e, 0.85);
+    background-color: alpha(@window_bg_color, 0.85);
 }

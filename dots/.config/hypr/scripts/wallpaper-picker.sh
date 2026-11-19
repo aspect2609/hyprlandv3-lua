@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Wallpaper picker (SUPER + W): rofi grid of thumbnails. Picking one sets it
-# through waypaper, whose post_command (waybar/theme.sh) re-themes everything.
+# through scripts/wallpaper.sh, which re-themes everything (waybar/theme.sh).
 
 DIR="$HOME/Pictures/Wallpapers"
 THUMBS="${XDG_CACHE_HOME:-$HOME/.cache}/wallpaper-thumbs"
@@ -31,4 +31,4 @@ done | rofi -dmenu -i -p "Wallpaper" -show-icons -no-custom \
         element  { children: [ element-icon ]; padding: 6px; border-radius: 8px; }
         element-icon { size: 190px; }')
 
-[ -n "$choice" ] && waypaper --wallpaper "$DIR/$choice"
+[ -n "$choice" ] && ~/.config/hypr/scripts/wallpaper.sh "$DIR/$choice"
